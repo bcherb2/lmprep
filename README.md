@@ -28,6 +28,15 @@ https://github.com/user-attachments/assets/27d49b03-76a0-4742-9883-e361b73bc10e
 
 ### Installation
 
+The easiest way to install LMPrep is to get it from PyPi:
+
+```bash
+pip install lmprep
+```
+wheels are built for Windows, Linux, and MacOS.
+
+#### Manaul / Install Script
+
 1. Download the latest release for your platform from [Releases](https://github.com/bcherb2/lmprep/releases):
    - Windows: `lm-x86_64-pc-windows-msvc.zip`
    - Linux: `lm-x86_64-unknown-linux-gnu.tar.gz`
