@@ -10,6 +10,10 @@ A lightning-fast utility for preparing and organizing your code for use with LLM
 
 For example, a file at `src/models/user.py` will be renamed to `src^models^user.py` in the output directory.
 
+
+https://github.com/user-attachments/assets/27d49b03-76a0-4742-9883-e361b73bc10e
+
+
 ## Features
 
 - **Smart File Organization**: Automatically flattens complex directory structures while preserving path information in the filenames and in a file tree
