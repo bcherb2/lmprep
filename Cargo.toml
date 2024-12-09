@@ -1,6 +1,6 @@
 [package]
 name = "lmprep"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 authors = ["bcherb2"]
 description = "A tool for preparing your codebase for use with LLMs"
