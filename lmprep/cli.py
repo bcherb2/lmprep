@@ -5,7 +5,8 @@ import subprocess
 import sys
 import shutil
 from pathlib import Path
-import pkg_resources
+from importlib import resources
+from importlib.resources import files
 
 def get_binary_name():
     """Get the appropriate binary name for the current platform."""
@@ -30,8 +31,7 @@ def get_binary_path():
             return "binaries/darwin_arm64/lm"
         else:
             return "binaries/darwin_x86_64/lm"
-    else:
-        raise RuntimeError(f"Unsupported platform: {system} {machine}")
+    raise RuntimeError(f"Unsupported platform: {system} {machine}")
 
 def install_binary():
     """Install the binary from package resources."""
@@ -40,7 +40,10 @@ def install_binary():
         binary_path = get_binary_path()
         
         try:
-            resource_path = pkg_resources.resource_filename("lmprep", binary_path)
+            resource_path = files("lmprep").joinpath(binary_path)
+            if not resource_path.is_file():
+                raise RuntimeError(f"Binary not found at {resource_path}")
+            resource_path = str(resource_path)
         except Exception as e:
             raise RuntimeError(f"Binary not found in package: {e}")
             
@@ -60,6 +63,7 @@ def install_binary():
         if platform.system().lower() != "windows":
             os.chmod(target_path, 0o755)
             
+        print(f"Successfully installed lm binary to {target_path}")
         return target_path
             
     except Exception as e:
@@ -109,6 +113,8 @@ def main():
                 timeout=30
             )
             
+            if result.returncode == 0:
+                print("lm completed successfully")
             if result.stdout:
                 print(result.stdout)
             if result.stderr:
