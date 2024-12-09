@@ -1,0 +1,22 @@
+allowed_extensions:
+  - py
+  - rs
+  - md
+  - txt
+  - js
+  - ts
+  - html
+  - css
+  - cs
+  - json
+  - yaml
+  - go
+  - java
+  - cpp
+  - c
+  
+delimiter: "^"
+subfolder: context
+zip: false
+tree: true
+respect_gitignore: true
