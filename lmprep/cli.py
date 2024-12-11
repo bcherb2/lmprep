@@ -24,10 +24,8 @@ def get_binary_path():
     elif system == "linux":
         return "binaries/linux_x86_64/lm"
     elif system == "darwin":
-        if machine == "arm64":
-            return "binaries/darwin_arm64/lm"
-        else:
-            return "binaries/darwin_x86_64/lm"
+        # macOS uses universal binary now
+        return "binaries/darwin_universal2/lm"
     raise RuntimeError(f"Unsupported platform: {system} {machine}")
 
 def get_binary():

@@ -78,7 +78,7 @@ class CustomBuildPy(build_py):
 if __name__ == "__main__":    
     setup(
         name="lmprep",
-        version="0.3.1",
+        version="0.3.2",
         packages=["lmprep"],
         include_package_data=True,
         cmdclass={
