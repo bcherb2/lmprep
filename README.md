@@ -8,7 +8,7 @@
 
 A lightning-fast utility for preparing and organizing your code for use with LLMs like Claude Projects.  LMPrep will collect and rename all of your project files to a flat directory, but preserving the structure within the filenames.  
 
-For example, a file at `src/models/user.py` will be renamed to `src^models^user.py` in the output directory.
+For example, a file at `src/models/user.py` will be renamed to `src^models^user.py` in the output directory.  Be sure to tell the LLM that your files are structured this way!
 
 
 https://github.com/user-attachments/assets/27d49b03-76a0-4742-9883-e361b73bc10e
