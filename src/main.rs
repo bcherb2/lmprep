@@ -176,10 +176,13 @@ impl<'a> FileProcessor<'a> {
     }
 
     fn process_files(&self, files: Vec<(PathBuf, String)>) -> Result<()> {
+        let file_count = files.len();
         if self.config.zip {
             self.create_zip_archive(files)?;
+            println!("Successfully created zip archive with {} files in folder '{}'", file_count, self.config.subfolder);
         } else {
             self.copy_files(files)?;
+            println!("Successfully created {} files in folder '{}'", file_count, self.config.subfolder);
         }
         Ok(())
     }
@@ -268,8 +271,13 @@ fn load_config(config_path: &Option<String>) -> Result<Config> {
         let home_path = PathBuf::from(home);
         for ext in &[".yml", ".yaml"] {
             let config_path = home_path.join(format!(".lmprep{}", ext));
-            if let Ok(config) = load_config_from_path(&config_path.to_string_lossy()) {
-                return Ok(config);
+            match load_config_from_path(&config_path.to_string_lossy()) {
+                Ok(config) => return Ok(config),
+                Err(e) if e.to_string().contains("Permission denied") => {
+                    eprintln!("Warning: Could not read config from home directory (permission denied)");
+                    break;  // Don't try other extensions if we have permission issues
+                }
+                Err(_) => continue,  // Try next extension
             }
         }
     }
@@ -278,8 +286,13 @@ fn load_config(config_path: &Option<String>) -> Result<Config> {
         let home_path = PathBuf::from(home);
         for ext in &[".yml", ".yaml"] {
             let config_path = home_path.join(format!(".lmprep{}", ext));
-            if let Ok(config) = load_config_from_path(&config_path.to_string_lossy()) {
-                return Ok(config);
+            match load_config_from_path(&config_path.to_string_lossy()) {
+                Ok(config) => return Ok(config),
+                Err(e) if e.to_string().contains("Permission denied") => {
+                    eprintln!("Warning: Could not read config from home directory (permission denied)");
+                    break;  // Don't try other extensions if we have permission issues
+                }
+                Err(_) => continue,  // Try next extension
             }
         }
     }

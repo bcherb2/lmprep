@@ -1,7 +1,7 @@
 name: Test Release Workflow
 
 on:
-  workflow_dispatch:  # Only manual triggers
+  workflow_dispatch: 
 
 jobs:
   build-rust:
