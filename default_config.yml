@@ -1,3 +1,4 @@
+subfolder: "context"
 allowed_extensions:
   - py
   - rs
@@ -14,9 +15,21 @@ allowed_extensions:
   - java
   - cpp
   - c
-  
+ignored_directories:
+  - node_modules
+  - venv
+  - .venv
+  - env
+  - .env
+  - target
+  - build
+  - dist
+  - __pycache__
+  - .git
+  - .idea
+  - .vs
+  - .vscode
 delimiter: "^"
-subfolder: context
 zip: false
 tree: true
 respect_gitignore: true

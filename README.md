@@ -108,6 +108,8 @@ allowed_extensions:
   - rs
   - md
   - txt
+ignored_directories:
+  - node_modules
 delimiter: "^"
 subfolder: context
 zip: false
@@ -121,7 +123,8 @@ respect_gitignore: true
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `allowed_extensions` | File extensions to include | `[]` (all files) |
+| `allowed_extensions` | File extensions to include | `[]` (common extensions) |
+| `ignored_directories` | Directories to ignore | `[]` (common directories) |
 | `delimiter` | Character used to represent path hierarchy | `^` |
 | `subfolder` | Output directory name within project | `context` |
 | `zip` | Create zip archive instead of files | `false` |
@@ -148,8 +151,7 @@ Options:
 
 ## Use Cases
 
-- **ML Dataset Preparation**: Organize your training data into a flat structure while preserving context (works especially well with Claude Projects)
-- **Code Analysis**: Prepare source code for analysis by LLMs
+- **Code Analysis**: Organize your code into a flat structure while preserving context (works especially well with Claude Projects)
 - **Document Processing**: Organize and prepare document collections for processing, logs, etc.
 - **Version Control**: Easily create clean snapshots of your codebase for archival in zip format
 

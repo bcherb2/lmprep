@@ -73,15 +73,24 @@ fn default_ignored_directories() -> Vec<String> {
     ]
 }
 
+// Include default config at compile time
+const DEFAULT_CONFIG: &str = include_str!("../default_config.yml");
+
 impl Default for Config {
     fn default() -> Self {
-        Self {
-            allowed_extensions: vec![],
-            delimiter: default_delimiter(),
-            subfolder: default_subfolder(),
-            zip: false,
-            ignored_directories: default_ignored_directories(),
-            respect_gitignore: default_respect_gitignore(),
+        match serde_yaml::from_str(DEFAULT_CONFIG) {
+            Ok(config) => config,
+            Err(e) => {
+                eprintln!("Warning: Error parsing default config: {}. Using hardcoded defaults.", e);
+                Self {
+                    allowed_extensions: vec![],
+                    delimiter: default_delimiter(),
+                    subfolder: default_subfolder(),
+                    zip: false,
+                    ignored_directories: default_ignored_directories(),
+                    respect_gitignore: default_respect_gitignore(),
+                }
+            }
         }
     }
 }

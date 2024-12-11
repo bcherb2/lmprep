@@ -69,34 +69,34 @@ def install_binary():
     except Exception as e:
         raise RuntimeError(f"Failed to install binary: {e}")
 
+def get_default_config():
+    """Get the default configuration from the default_config.yml file."""
+    default_config_path = Path(__file__).parent.parent / "default_config.yml"
+    if not default_config_path.exists():
+        raise RuntimeError("Default config file not found. Please reinstall lmprep.")
+    return default_config_path.read_text()
+
 def create_config():
-    """Create default config file if it doesn't exist."""
+    """Create default config files if they don't exist."""
+    # Create config in home directory
     home = Path.home()
-    config_file = home / ".lmprep.yml"
+    home_config = home / ".lmprep.yml"
     
-    if not config_file.exists():
-        config_content = """# Default configuration for lmprep
-subfolder: "context"
-allowed_extensions: []
-ignored_directories: [
-    "node_modules",
-    "venv",
-    ".venv",
-    "env",
-    ".env",
-    "target",
-    "build",
-    "dist",
-    "__pycache__",
-    ".git",
-    ".idea",
-    ".vs",
-    ".vscode"
-]
-respect_gitignore: true"""
+    # Create config in current directory
+    local_config = Path(".lmprep.yml")
+    
+    # Get default config content
+    config_content = get_default_config()
+    
+    # Create in home directory if it doesn't exist
+    if not home_config.exists():
+        home_config.write_text(config_content)
+        print(f"Created default configuration at {home_config}")
         
-        config_file.write_text(config_content)
-        print(f"Created default configuration at {config_file}")
+    # Create in current directory if it doesn't exist
+    if not local_config.exists():
+        local_config.write_text(config_content)
+        print(f"Created local configuration at {local_config}")
 
 def main():
     """Main entry point for the CLI."""

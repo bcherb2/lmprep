@@ -1,4 +1,5 @@
 include LICENSE
 include README.md
 include PYPI_README.md
+include default_config.yml
 recursive-include lmprep/binaries *

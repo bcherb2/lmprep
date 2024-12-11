@@ -1,6 +1,7 @@
 context
 /context/*
 .DS_Store
+lmprep/binaries
 
 # ---
 # Rust
