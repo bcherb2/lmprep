@@ -1,0 +1,22 @@
+[package]
+name = "lmprep"
+version = "0.4.0"
+edition = "2021"
+authors = ["bcherb2"]
+description = "A tool for preparing your codebase for use with LLMs"
+license = "MIT"
+repository = "https://github.com/bcherb2/lmprep"
+readme = "README.md"
+
+[[bin]]
+name = "lm"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0"
+clap = { version = "4.4", features = ["derive"] }
+ignore = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+walkdir = "2.4"
+zip = "0.6"

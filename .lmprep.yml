@@ -1,0 +1,35 @@
+subfolder: "context"
+allowed_extensions:
+  - py
+  - rs
+  - md
+  - txt
+  - js
+  - ts
+  - html
+  - css
+  - cs
+  - json
+  - yaml
+  - go
+  - java
+  - cpp
+  - c
+ignored_directories:
+  - node_modules
+  - venv
+  - .venv
+  - env
+  - .env
+  - target
+  - build
+  - dist
+  - __pycache__
+  - .git
+  - .idea
+  - .vs
+  - .vscode
+delimiter: "^"
+zip: false
+tree: true
+respect_gitignore: true
