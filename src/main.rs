@@ -114,7 +114,7 @@ impl<'a> FileProcessor<'a> {
         let source_path = Path::new(source);
         let output_dir = source_path.join(&config.subfolder);
         let filter = FileFilter::new(source_path, config)?;
-        
+
         Ok(Self {
             source_path,
             output_dir,
@@ -184,17 +184,41 @@ impl<'a> FileProcessor<'a> {
 
     fn process(&self) -> Result<()> {
         let files = self.collect_files()?;
-        
+        let file_count = files.len();
+        let mut tree_content = String::new();
+
         if self.args.tree {
-            self.generate_tree()?;
+            if self.verbose {
+                println!("Generating file tree...");
+            }
+            let mut seen_dirs = BTreeMap::new();
+            tree_content = generate_tree_string(
+                self.source_path,
+                "",
+                true,
+                &mut seen_dirs,
+                &self.config.allowed_extensions,
+                &self.config.ignored_directories,
+                self.filter.gitignore(),
+                self.source_path,
+            )?;
         }
 
         if self.args.zip {
-            self.create_zip(files)?;
+            self.create_zip(files, if self.args.tree { Some(&tree_content) } else { None })?;
+            println!("Successfully zipped {} files to {:?}", file_count, self.output_dir);
         } else {
             self.copy_files(files)?;
+            if self.args.tree {
+                let tree_file_path = self.output_dir.join("filetree.txt");
+                fs::write(&tree_file_path, tree_content)?;
+                if self.verbose {
+                    println!("Tree written to {:?}", tree_file_path);
+                }
+            }
+            println!("Successfully processed {} files to {:?}", file_count, self.output_dir);
         }
-        
+
         Ok(())
     }
 
@@ -227,34 +251,7 @@ impl<'a> FileProcessor<'a> {
         Ok(())
     }
 
-    fn generate_tree(&self) -> Result<()> {
-        if self.verbose {
-            println!("Generating file tree...");
-        }
-
-        let mut seen_dirs = BTreeMap::new();
-        let tree_string = generate_tree_string(
-            self.source_path,
-            "",
-            true,
-            &mut seen_dirs,
-            &self.config.allowed_extensions,
-            &self.config.ignored_directories,
-            self.filter.gitignore(),
-            self.source_path,
-        )?;
-
-        let tree_file_path = self.output_dir.join("filetree.txt");
-        fs::write(&tree_file_path, tree_string)?;
-        
-        if self.verbose {
-            println!("Tree written to {:?}", tree_file_path);
-        }
-
-        Ok(())
-    }
-
-    fn create_zip(&self, files: Vec<(PathBuf, String)>) -> Result<()> {
+    fn create_zip(&self, files: Vec<(PathBuf, String)>, tree_content: Option<&str>) -> Result<()> {
         if self.verbose {
             println!("Starting to create zip archive");
         }
@@ -276,6 +273,13 @@ impl<'a> FileProcessor<'a> {
             zip.start_file(&new_name, Default::default())?;
             let mut file = fs::File::open(&source_path)?;
             std::io::copy(&mut file, &mut zip)?;
+        }
+
+        // Add the tree file to the zip if it was generated
+        if let Some(content) = tree_content {
+            zip.start_file("filetree.txt", Default::default())?;
+            use std::io::Write;
+            zip.write_all(content.as_bytes())?;
         }
 
         zip.finish()?;
@@ -322,7 +326,7 @@ fn main() -> Result<()> {
 
     let processor = FileProcessor::new(&args.source, &config, args.verbose, &args)?;
     processor.prepare_output_directory()?;
-    
+
     processor.process()?;
 
     Ok(())
@@ -430,7 +434,7 @@ fn generate_tree_string(
             seen_dirs.insert(path.to_path_buf(), true);
         }
 
-        result.push_str(&format!("{}{}{}\n", 
+        result.push_str(&format!("{}{}{}\n",
             prefix,
             if is_last { "└── " } else { "├── " },
             if path.is_dir() { format!("{}/", file_name) } else { file_name.to_string() }
@@ -472,7 +476,7 @@ fn generate_tree_string(
                 gitignore,
                 source_path,
             )?;
-            
+
             result.push_str(&child_output);
         }
     }
